@@ -234,6 +234,63 @@ unlockBtn.addEventListener('click', async () => {
     }
 });
 
+// --- x402 PREMIUM FORGE (Agent-as-a-Service) ---
+const premiumForgeBtn = document.getElementById('premiumForgeBtn');
+
+premiumForgeBtn.addEventListener('click', async () => {
+    const plainText = document.getElementById('plainText').value;
+    const recipientPubKey = document.getElementById('pubKey').value;
+
+    if (!plainText || !recipientPubKey) {
+        appendChat('system', "⚠️ Enter a secret and recipient key in the FORGEBOX tab first, then request Premium Forge.");
+        return;
+    }
+
+    appendChat('system', "◈ Initiating x402 Premium Forge...");
+    appendChat('system', "Sending request without payment to trigger HTTP 402 challenge...");
+
+    try {
+        // Step 1: Hit the endpoint WITHOUT payment to get 402 challenge
+        const res = await fetch('/api/forge-premium', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ secret: plainText, recipientKey: recipientPubKey })
+        });
+
+        if (res.status === 402) {
+            const requirements = await res.json();
+            const accept = requirements.accepts[0];
+
+            appendChat('system',
+                `🔴 HTTP 402 — Payment Required\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                `Service: ${accept.description}\n` +
+                `Amount: ${parseInt(accept.maxAmountRequired) / 1e6} USDC\n` +
+                `Network: Base Mainnet (${accept.network})\n` +
+                `Pay To: ${accept.payTo}\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                `To complete: Send 5 USDC to the address above on Base, ` +
+                `then re-submit with X-Payment header containing the signed payment payload.`
+            );
+
+            appendChat('system',
+                "💡 For AI agents: Use the x402 client SDK to automatically handle this flow. " +
+                "Install with: npm install @x402/core — then wrap your fetch with the x402 client."
+            );
+
+        } else if (res.ok) {
+            const data = await res.json();
+            appendChat('system', `✅ Premium Forge complete! CID: ${data.cid}. ${data.message}`);
+        } else {
+            const err = await res.json();
+            appendChat('system', `❌ Error: ${err.error || 'Unknown error'}`);
+        }
+
+    } catch (err) {
+        appendChat('system', "Connection failed. Ensure the Worker is deployed.");
+    }
+});
+
 function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 init();

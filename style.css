@@ -136,6 +136,9 @@ body {
 
 .sidebar-actions {
     margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
 .download-btn-mini {
@@ -158,6 +161,30 @@ body {
     background: rgba(0, 255, 170, 0.1);
     border-color: var(--accent-green);
     box-shadow: 0 0 10px rgba(0, 255, 170, 0.2);
+}
+
+.download-btn-mini.secondary {
+    color: var(--accent-cyan);
+}
+
+.download-btn-mini.secondary:hover {
+    background: rgba(0, 243, 255, 0.1);
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+}
+
+.download-btn-mini.premium {
+    color: var(--accent-pink);
+    border-color: rgba(255, 45, 125, 0.3);
+    cursor: pointer;
+    font-family: var(--font-mono);
+    background: rgba(255, 45, 125, 0.05);
+}
+
+.download-btn-mini.premium:hover {
+    background: rgba(255, 45, 125, 0.15);
+    border-color: var(--accent-pink);
+    box-shadow: 0 0 12px rgba(255, 45, 125, 0.3);
 }
 
 .dot {
