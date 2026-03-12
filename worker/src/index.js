@@ -3,7 +3,7 @@
 
 const FACILITATOR_URL = "https://x402.org/facilitator";
 // IMPORTANT: Set this to your real Base wallet address to receive USDC payments
-const PAYMENT_RECEIVER = "0x0000000000000000000000000000000000000000"; // TODO: Replace with your wallet
+const PAYMENT_RECEIVER = "0x65D472172E4933aa4Ddb995CF4Ca8bef72a46576";
 
 export default {
     async fetch(request, env, ctx) {
