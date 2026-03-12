@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLAVIGER // PROXIMAL PROTOCOL</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;300;400;700&family=Outfit:wght@100;300;400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/eciesjs@0.4.6/dist/index.browser.js"></script>
+</head>
+<body>
+    <div class="glow-bg"></div>
+    <div class="noise-overlay"></div>
+
+    <div class="api-settings glass">
+        <input type="password" id="pinataJwt" placeholder="PINATA JWT (for real IPFS upload)">
+    </div>
+
+    <main id="app">
+        <!-- Sidebar: The Scribe (AI) -->
+        <aside class="sidebar glass">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">◈</span>
+                    <span class="logo-text">CLAVIGER</span>
+                </div>
+                <div class="status-indicator">
+                    <span class="dot pulse"></span>
+                    <span class="status-label">FORGE ONLINE</span>
+                </div>
+                <div class="sidebar-actions">
+                    <a href="claviger_skill.zip" download class="download-btn-mini">
+                        <span class="icon">↓</span> DOWNLOAD SKILL
+                    </a>
+                </div>
+            </div>
+
+            <div class="chat-container" id="scribeChat">
+                <div class="chat-msg system">
+                    <span class="prefix">[SYSTEM]</span> Claviger Scribe initialized. How shall we secure your intent?
+                </div>
+            </div>
+
+            <div class="chat-input-wrapper">
+                <input type="text" id="scribeInput" placeholder="Command the Scribe..." autocomplete="off">
+                <button id="sendBtn">↵</button>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <section class="workspace">
+            <header class="top-nav glass">
+                <div class="nav-links">
+                    <button class="nav-item active" data-tab="forge">FORGEBOX</button>
+                    <button class="nav-item" data-tab="vault">VAULT</button>
+                    <button class="nav-item" data-tab="cloudflare">CLOUDFLARE KV</button>
+                </div>
+                <div class="node-info">
+                    <span class="label">NODE:</span>
+                    <span class="value">G-CLAW-0x86</span>
+                </div>
+            </header>
+
+            <div class="content-area">
+                <!-- FORGE TAB -->
+                <div id="forge" class="tab-content active">
+                    <div class="forge-grid">
+                        <div class="input-card glass">
+                            <h3 class="card-title">PLAIN TEXT SECRETS</h3>
+                            <textarea id="plainText" placeholder='{"buy": "ETH", "amount": 10}'></textarea>
+                            
+                            <h3 class="card-title">RECIPIENT PUBLIC KEY</h3>
+                            <input type="text" id="pubKey" placeholder="0x..." value="02c7b5a5c602d32694b9f34a17ed1658e469d7240683439b1e7c997092dfda8e">
+                            
+                            <button id="forgeBtn" class="primary-btn">INITIATE FORGE SEQUENCE</button>
+                        </div>
+
+                        <div class="visualizer-card glass">
+                            <div class="cipher-stage idle" id="cipherVisualizer">
+                                <div class="layer outer"></div>
+                                <div class="layer middle"></div>
+                                <div class="layer inner"></div>
+                                <div class="lock-icon">🔒</div>
+                                <div class="stage-text">Awaiting Input...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="output-card glass hidden" id="forgeOutput">
+                        <div class="output-header">
+                            <span>ENCRYPTED CID (IPFS)</span>
+                            <button class="copy-btn">COPY</button>
+                        </div>
+                        <div class="cid-value" id="cidValue">QmX...</div>
+                        <div class="protocol-log" id="protocolLog"></div>
+                    </div>
+                </div>
+
+                <!-- VAULT TAB -->
+                <div id="vault" class="tab-content">
+                    <div class="vault-hero">
+                        <h2 class="hero-title">DECRYPT RECEPTION</h2>
+                        <div class="vault-input-group glass">
+                            <input type="text" id="inputCid" placeholder="Enter IPFS CID (Qm...)">
+                            <input type="password" id="privateKey" placeholder="Enter Private Key">
+                            <button id="unlockBtn" class="accent-btn">UNLOCK SECRETS</button>
+                        </div>
+                        <div id="decryptedOutput" class="decrypted-card glass hidden">
+                            <pre id="decryptedJson"></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CLOUDFLARE TAB -->
+                <div id="cloudflare" class="tab-content">
+                    <div class="kv-header">
+                        <h2>CLOUDFLARE WORKERS KV</h2>
+                        <span class="namespace">NS: CLAVIGER_SECRETS</span>
+                    </div>
+                    <div class="kv-table-wrapper glass">
+                        <table class="kv-table">
+                            <thead>
+                                <tr>
+                                    <th>KEY</th>
+                                    <th>VALUE (ENCRYPTED)</th>
+                                    <th>EXPIRATION</th>
+                                    <th>ACTIONS</th>
+                                </tr>
+                            </thead>
+                            <tbody id="kvBody">
+                                <!-- Data injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
